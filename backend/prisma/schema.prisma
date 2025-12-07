@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  parentId  Int?
+  parent    Category? @relation("CategoryParent", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryParent")
+  contents  Content[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  contents ContentTag[]
+
+  @@map("tags")
+}
+
+model Content {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String?
+  sourcePlatform String   // douyin, xiaohongshu
+  sourceUrl     String?
+  contentType   String    // video, image, text
+  filePath      String?
+  thumbnailPath String?
+  tags          String[]  // 存储为JSON数组
+  categoryId    Int?
+  category      Category? @relation(fields: [categoryId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  contentTags ContentTag[]
+
+  @@map("contents")
+}
+
+model ContentTag {
+  contentId Int
+  tagId     Int
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, tagId])
+  @@map("content_tags")
+}

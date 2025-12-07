@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=file:./dev.db
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/prisma:/app/prisma
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001/api
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  uploads:
+  database:

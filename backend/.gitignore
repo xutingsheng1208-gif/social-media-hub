@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+.env.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads
+uploads/videos/
+uploads/images/
+uploads/thumbnails/
+!uploads/.gitkeep
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
